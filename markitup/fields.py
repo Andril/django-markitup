@@ -94,9 +94,10 @@ class MarkupField(models.TextField):
 
     def pre_save(self, model_instance, add):
         value = super(MarkupField, self).pre_save(model_instance, add)
-        rendered = render_func(value.raw)
-        setattr(model_instance, _rendered_field_name(self.attname), rendered)
-        return value.raw
+        if value is not None:
+            rendered = render_func(value.raw)
+            setattr(model_instance, _rendered_field_name(self.attname), rendered)
+            return value.raw
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
